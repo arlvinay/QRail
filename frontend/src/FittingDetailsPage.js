@@ -11,7 +11,8 @@ const FittingDetailsPage = () => {
     useEffect(() => {
         const fetchFitting = async () => {
             try {
-                const res = await axios.get(`http://localhost:5000/api/fittings/${guid}`);
+                // This is the NEW, correct code pointing to your live server
+                const res = await axios.get(`https://qrail.onrender.com/api/fittings/${guid}`);
                 setFitting(res.data);
             } catch (err) {
                 setError('Component Not Found');
