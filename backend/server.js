@@ -15,18 +15,27 @@ connection.once('open', () => {
   console.log("✅ MongoDB database connection established successfully");
 });
 
+// --- THIS IS THE UPDATED SCHEMA ---
+// We've added all the new fields from your problem statement.
 const fittingSchema = new mongoose.Schema({
     guid: { type: String, required: true, unique: true },
     component_type: { type: String, required: true },
-    manufacturer_id: { type: String },
+    manufacturer_id: { type: String, required: true },
+    production_date: { type: String },
+    batch_id: { type: String },
+    warranty_period: { type: String },
+    install_date: { type: String },
+    install_location: { type: String },
     status: { type: String, required: true },
+    last_inspection_date: { type: String }
 }, { collection: 'fittings' });
+
 const Fitting = mongoose.model('Fitting', fittingSchema);
 
 
+// This route will now automatically fetch all the new data
 app.get('/api/fittings/:guid', async (req, res) => {
     try {
-        console.log(`Searching for GUID: ${req.params.guid}`);
         const fitting = await Fitting.findOne({ guid: req.params.guid });
         if (!fitting) {
             return res.status(404).json({ msg: 'Fitting not found' });
