@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
+// This is the updated, professionally styled report page with CSS included.
 const FittingDetailsPage = () => {
     const { guid } = useParams();
     const [fitting, setFitting] = useState(null);
@@ -11,7 +12,6 @@ const FittingDetailsPage = () => {
     useEffect(() => {
         const fetchFitting = async () => {
             try {
-                // This URL points to your LIVE backend server
                 const res = await axios.get(`https://qrail.onrender.com/api/fittings/${guid}`);
                 setFitting(res.data);
             } catch (err) {
@@ -23,79 +23,130 @@ const FittingDetailsPage = () => {
         fetchFitting();
     }, [guid]);
 
-    if (loading) return <div className="text-center p-10 font-sans text-xl">Loading...</div>;
+    // The CSS is now embedded directly inside the component using a <style> tag.
+    // This ensures these styles take priority and are not affected by other stylesheets.
+    const pageStyles = `
+        #qrail-report-root {
+            background-color: #111827; /* Dark Blue Background */
+            color: #F9FAFB; /* White Text */
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            min-height: 100vh;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+        .report-card {
+            background-color: #1F2937; /* Lighter dark card */
+            max-width: 48rem;
+            margin: auto;
+            border-radius: 0.5rem;
+            border: 1px solid #374151;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .report-header { text-align: center; margin-bottom: 1.5rem; }
+        .report-title { font-size: 1.875rem; font-weight: bold; color: #F9FAFB; }
+        .card-content { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+        .guid-section { border-bottom: 1px solid #374151; padding-bottom: 1rem; }
+        .detail-label { font-size: 0.875rem; color: #9CA3AF; }
+        .guid-value { font-family: monospace; font-size: 1.125rem; word-break: break-all; color: #F9FAFB; }
+        .details-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+        @media (min-width: 768px) { .details-grid { grid-template-columns: repeat(2, 1fr); } }
+        .detail-value-main { font-size: 1.25rem; font-weight: 600; color: #F9FAFB; }
+        .detail-value { font-size: 1.125rem; color: #F9FAFB; }
+        .section-header { font-size: 1.125rem; font-weight: 600; color: #D1D5DB; padding-top: 1rem; border-top: 1px solid #374151; margin-top: 1rem; }
+        .status-badge { font-size: 1.125rem; font-weight: 600; padding: 0.25rem 0.75rem; display: inline-block; border-radius: 9999px; }
+        .status-installed { background-color: #064e3b; color: #6ee7b7; }
+        .status-depot { background-color: #422006; color: #fb923c; }
+        .loading-message { text-align: center; padding: 4rem; font-size: 1.25rem; }
+        .error-card { text-align: center; padding: 2rem; background-color: #1F2937; border-radius: 0.5rem; border: 1px solid #374151; max-width: 48rem; margin: auto; }
+        .error-title { font-size: 1.5rem; font-weight: bold; color: #EF4444; }
+        .error-message { color: #9CA3AF; margin-top: 0.5rem; }
+    `;
+
+    if (loading) {
+        return (
+            <>
+                <style>{pageStyles}</style>
+                <div id="qrail-report-root">
+                    <div className="loading-message">Loading Component Data...</div>
+                </div>
+            </>
+        );
+    }
 
     return (
-        <div className="bg-gray-100 min-h-screen font-sans">
-            <div className="container mx-auto p-4 sm:p-8 max-w-2xl">
-                <header className="text-center mb-6">
-                    <h1 className="text-3xl font-bold text-blue-800">Component Lifecycle Report</h1>
+        <>
+            <style>{pageStyles}</style>
+            <div id="qrail-report-root">
+                <header className="report-header">
+                    <h1 className="report-title">Component Lifecycle Report</h1>
                 </header>
 
-                {error ? (
-                     <div className="bg-white p-8 rounded-lg shadow-md text-center">
-                         <h2 className="text-2xl font-bold text-red-600">{error}</h2>
-                         <p className="text-gray-600 mt-2">The GUID you scanned does not exist in the database.</p>
+                {error || !fitting ? (
+                     <div className="error-card">
+                         <h2 className="error-title">{error || 'Component Not Found'}</h2>
+                         <p className="error-message">The GUID you scanned does not exist in the database.</p>
                     </div>
                 ) : (
-                    <div className="bg-white p-6 rounded-lg shadow-md">
-                        <div className="space-y-4">
-                            <div className="border-b pb-4">
-                                <p className="text-sm text-gray-500">GUID</p>
-                                <p className="font-mono text-lg text-gray-800 break-words">{fitting.guid}</p>
+                    <div className="report-card">
+                        <div className="card-content">
+                            <div className="guid-section">
+                                <p className="detail-label">GUID</p>
+                                <p className="guid-value">{fitting.guid}</p>
                             </div>
                             
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="details-grid">
                                 <div>
-                                    <p className="text-sm text-gray-500">Component Type</p>
-                                    <p className="text-xl font-semibold text-gray-900">{fitting.component_type}</p>
+                                    <p className="detail-label">Component Type</p>
+                                    <p className="detail-value-main">{fitting.component_type || 'N/A'}</p>
                                 </div>
                                  <div>
-                                    <p className="text-sm text-gray-500">Status</p>
-                                    <p className={`text-lg font-semibold px-3 py-1 inline-block rounded-full ${fitting.status === 'Installed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>{fitting.status}</p>
+                                    <p className="detail-label">Status</p>
+                                    <p className={fitting.status === 'Installed' ? 'status-badge status-installed' : 'status-badge status-depot'}>
+                                        {fitting.status || 'N/A'}
+                                    </p>
                                 </div>
                             </div>
 
-                            <h3 className="text-lg font-semibold text-gray-700 pt-4 border-t">Supply & Warranty</h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <h3 className="section-header">Supply & Warranty</h3>
+                            <div className="details-grid">
                                 <div>
-                                    <p className="text-sm text-gray-500">Manufacturer ID</p>
-                                    <p className="text-lg">{fitting.manufacturer_id}</p>
+                                    <p className="detail-label">Manufacturer ID</p>
+                                    <p className="detail-value">{fitting.manufacturer_id || 'N/A'}</p>
                                 </div>
                                 <div>
-                                    <p className="text-sm text-gray-500">Batch ID</p>
-                                    <p className="text-lg">{fitting.batch_id || 'N/A'}</p>
+                                    <p className="detail-label">Batch ID</p>
+                                    <p className="detail-value">{fitting.batch_id || 'N/A'}</p>
                                 </div>
                                 <div>
-                                    <p className="text-sm text-gray-500">Production Date</p>
-                                    <p className="text-lg">{fitting.production_date || 'N/A'}</p>
+                                    <p className="detail-label">Production Date</p>
+                                    <p className="detail-value">{fitting.production_date || 'N/A'}</p>
                                 </div>
                                 <div>
-                                    <p className="text-sm text-gray-500">Warranty Period</p>
-                                    <p className="text-lg">{fitting.warranty_period || 'N/A'}</p>
+                                    <p className="detail-label">Warranty Period</p>
+                                    <p className="detail-value">{fitting.warranty_period || 'N/A'}</p>
                                 </div>
                             </div>
                             
-                            <h3 className="text-lg font-semibold text-gray-700 pt-4 border-t">Inspection & Service</h3>
-                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <h3 className="section-header">Inspection & Service</h3>
+                             <div className="details-grid">
                                 <div>
-                                    <p className="text-sm text-gray-500">Installation Date</p>
-                                    <p className="text-lg">{fitting.install_date || 'N/A'}</p>
+                                    <p className="detail-label">Installation Date</p>
+                                    <p className="detail-value">{fitting.install_date || 'N/A'}</p>
                                 </div>
                                 <div>
-                                    <p className="text-sm text-gray-500">Last Inspection</p>
-                                    <p className="text-lg">{fitting.last_inspection_date || 'N/A'}</p>
+                                    <p className="detail-label">Last Inspection</p>
+                                    <p className="detail-value">{fitting.last_inspection_date || 'N/A'}</p>
                                 </div>
-                                <div className="md:col-span-2">
-                                    <p className="text-sm text-gray-500">Location</p>
-                                    <p className="text-lg">{fitting.install_location || 'N/A'}</p>
+                                <div style={{gridColumn: '1 / -1'}}>
+                                    <p className="detail-label">Location</p>
+                                    <p className="detail-value">{fitting.install_location || 'N/A'}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 )}
             </div>
-        </div>
+        </>
     );
 };
 
