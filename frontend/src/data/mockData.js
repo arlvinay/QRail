@@ -10,12 +10,15 @@ export const mockInventoryData = [
 export const mockVendorData = {
     summary: { score: 84.8, failureRate: '4.5%', contractValue: '₹126M' },
     failureRates: [
-        { name: 'RailTech', value: 2.1 }, { name: 'SteelTrack', value: 3.8 },
-        { name: 'FastClip', value: 5.2 }, { name: 'MetalWorks', value: 6.9 },
+        { name: 'RailTech', value: 2.1 },
+        { name: 'SteelTrack', value: 3.8 },
+        { name: 'FastClip', value: 5.2 },
+        { name: 'MetalWorks', value: 6.9 },
     ],
     performanceOverTime: [
-        { name: 'Jan', value: 92 }, { name: 'Feb', value: 89 }, { name: 'Mar', value: 87 }, { name: 'Apr', value: 91 },
-        { name: 'May', value: 94 }, { name: 'Jun', value: 92 }, { name: 'Jul', value: 95 }, { name: 'Aug', value: 93 },
+        { name: 'Jan', value: 92 }, { name: 'Feb', value: 89 }, { name: 'Mar', value: 87 },
+        { name: 'Apr', value: 91 }, { name: 'May', value: 94 }, { name: 'Jun', value: 92 },
+        { name: 'Jul', value: 95 }, { name: 'Aug', value: 93 },
     ],
     rankings: [
         { rank: 1, name: 'RailTech Industries', score: 92, failureRate: '2.1%', contractValue: '₹45.0M', trend: 'up' },
