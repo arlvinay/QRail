@@ -24,6 +24,7 @@ const DashboardLayout = () => {
             // --- NEW: Add the search page to the switch ---
             case 'Component Report': return <ComponentReportPage />;
             default: return <DashboardPage />;
+            console.log(1);
         }
     };
 
